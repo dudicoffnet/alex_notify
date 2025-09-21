@@ -24,8 +24,37 @@ async def start_handler(message: Message):
 async def ping_handler(message: Message):
     await message.answer("🏓 Pong!")
 
+
+import requests
+
 @router.message(Command("report"))
+
+
 async def report_handler(message: Message):
+    if message.from_user.id != OWNER_ID:
+        await message.answer("⛔ Нет доступа")
+        return
+
+    try:
+        response = requests.post("https://valik.ai/api/report", json={
+            "questions": [
+                "Варианты перелёта из Минска на Фукуок с 5 по 25 ноября (на двоих, 1 пересадка, до 24 ч)",
+                "Снос/застройка улицы Мирной (район: Долгиновский, Старовиленский, Червякова, Пригородная)"
+            ],
+            "lang": "ru",
+            "auth_token": "test_token_123"
+        }, timeout=30)
+
+        data = response.json()
+        report = ""
+        for q, a in data["answers"].items():
+            report += f"❓ <b>{q}</b>\n💬 {a}\n\n"
+
+        await message.answer(report[:4096])  # Telegram message limit
+
+    except Exception as e:
+        await message.answer(f"⚠️ Ошибка при формировании отчёта: {str(e)}")
+
     if message.from_user.id != OWNER_ID:
         await message.answer("⛔ Нет доступа")
         return
