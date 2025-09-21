@@ -1,1 +1,1 @@
-python3 приложение/main.py
+web: python3 приложение/main.py
