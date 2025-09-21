@@ -50,7 +50,7 @@ async def report_handler(message: Message):
         for q, a in data["answers"].items():
             report += f"❓ <b>{q}</b>\n💬 {a}\n\n"
 
-        await message.answer(report[:4096])  # Telegram message limit
+        await message.answer(report[:4096])
 
     except Exception as e:
         await message.answer(f"⚠️ Ошибка при формировании отчёта: {str(e)}")
